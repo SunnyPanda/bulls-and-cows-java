@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Please, enter the secret code's length:");
         String secretCode = generateCode();
+        System.out.println(secretCode);
         System.out.println("Okay, let's start a game!");
 
         int turn = 1;
@@ -30,16 +31,10 @@ public class Main {
         }
 
         StringBuilder number = new StringBuilder();
-        StringBuilder pseudoRandomNumber = new StringBuilder(String.valueOf(System.nanoTime())).reverse();
-        for (int i = 0; number.length() < digits; i++) {
-            if (i < pseudoRandomNumber.length()) {
-                char digit = pseudoRandomNumber.charAt(i);
-                String strDigit = Character.getNumericValue(digit) == 0 && number.length() == 0 ? "" : "" + digit;
-                if (!number.toString().contains(strDigit)) number.append(strDigit);
-            } else {
-                pseudoRandomNumber = new StringBuilder(String.valueOf(System.nanoTime())).reverse();
-                i = 0;
-            }
+        while (number.length() < digits) {
+            int random = (int)(Math.random() * 10);
+            String strDigit = random == 0 && number.length() == 0 ? "" : "" + random;
+            if (!number.toString().contains(strDigit)) number.append(strDigit);
         }
         return number.toString();
     }
