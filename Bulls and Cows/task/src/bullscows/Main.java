@@ -3,13 +3,30 @@ package bullscows;
 import java.util.Scanner;
 
 public class Main {
+    private static final Scanner in = new Scanner(System.in);
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
+        System.out.println("Please, enter the secret code's length:");
+        String secretCode = generateCode();
+        System.out.println("Okay, let's start a game!");
+
+        int turn = 1;
+        System.out.printf("Turn %d:\n", turn);
+        String guess = in.next();
+        while (!grader(secretCode, guess)) {
+            turn++;
+            System.out.printf("Turn %d:\n", turn);
+            guess = in.next();
+        }
+        System.out.println("Congratulations! You guessed the secret code.");
+    }
+
+    private static String generateCode() {
         int digits = in.nextInt();
-        if (digits > 10) {
+        while (digits > 10) {
             System.out.printf("Error: can't generate a secret number with a length of %s because there aren't enough " +
                     "unique digits.\n", digits);
-            return;
+            System.out.println("Please, enter the secret code's length:");
+            digits = in.nextInt();
         }
 
         StringBuilder number = new StringBuilder();
@@ -24,19 +41,12 @@ public class Main {
                 i = 0;
             }
         }
-
-        System.out.printf("The random secret number is %s.\n", number);
+        return number.toString();
     }
-
-    private static void grader() {
-        String code = "9305";
-
-        Scanner in = new Scanner(System.in);
-        String guess = in.nextLine();
-
+    private static boolean grader(String code, String guess) {
         int bulls = 0;
         int cows = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < code.length(); i++) {
             if (guess.charAt(i) == code.charAt(i)) bulls++;
             else if (code.contains("" + guess.charAt(i))) cows++;
         }
@@ -46,6 +56,8 @@ public class Main {
         else if (bulls == 0) result = String.format("%d cow(s)", cows);
         else if (cows == 0) result = String.format("%d bull(s)", bulls);
         else result = String.format("%d bull(s) and %d cow(s)", bulls, cows);
-        System.out.printf("Grade: %s. The secret code is 9305.\n", result);
+        System.out.printf("Grade: %s.\n", result);
+
+        return bulls == code.length();
     }
 }
