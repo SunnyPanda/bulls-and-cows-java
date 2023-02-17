@@ -4,6 +4,31 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int digits = in.nextInt();
+        if (digits > 10) {
+            System.out.printf("Error: can't generate a secret number with a length of %s because there aren't enough " +
+                    "unique digits.\n", digits);
+            return;
+        }
+
+        StringBuilder number = new StringBuilder();
+        StringBuilder pseudoRandomNumber = new StringBuilder(String.valueOf(System.nanoTime())).reverse();
+        for (int i = 0; number.length() < digits; i++) {
+            if (i < pseudoRandomNumber.length()) {
+                char digit = pseudoRandomNumber.charAt(i);
+                String strDigit = Character.getNumericValue(digit) == 0 && number.length() == 0 ? "" : "" + digit;
+                if (!number.toString().contains(strDigit)) number.append(strDigit);
+            } else {
+                pseudoRandomNumber = new StringBuilder(String.valueOf(System.nanoTime())).reverse();
+                i = 0;
+            }
+        }
+
+        System.out.printf("The random secret number is %s.\n", number);
+    }
+
+    private static void grader() {
         String code = "9305";
 
         Scanner in = new Scanner(System.in);
